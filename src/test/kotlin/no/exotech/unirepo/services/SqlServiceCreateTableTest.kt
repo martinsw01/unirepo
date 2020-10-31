@@ -2,6 +2,7 @@ package no.exotech.unirepo.services
 
 import no.exotech.unirepo.entities.BaseEntity
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import javax.persistence.Entity
 
@@ -31,13 +32,23 @@ class SqlServiceCreateTableTest {
                 varchar(250) str2
             );
         """.replace(Regex("[\n ]"), "")
-        val actualSql = sqlService.createTableSql(entity).replace(Regex("[\n ]"), "")
+        val actualSql = sqlService.createTableSql(entity)
+                .replace(Regex("[\n ]"), "")
         assertEquals(expectedSql, actualSql)
     }
 
+    @Test
+    internal fun throwsException_WhenTypeNotSupported() {
+        val entity = TestEntity3(3, this)
+        assertThrows(NotImplementedError::class.java) { sqlService.createTableSql(entity) }
+    }
+
     @Entity(name = "test_table1")
-    class TestEntity1(id: Int, val str1: String) : BaseEntity(id)
+    private class TestEntity1(id: Int, val str1: String) : BaseEntity(id)
 
     @Entity(name = "test_table2")
-    class TestEntity2(id: Int, val str2: String) : BaseEntity(id)
+    private class TestEntity2(id: Int, val str2: String) : BaseEntity(id)
+
+    @Entity(name = "test_throws_exception_table3")
+    private class TestEntity3(id: Int, val any: Any) : BaseEntity(id)
 }
