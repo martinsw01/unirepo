@@ -7,6 +7,8 @@ import javax.persistence.Entity
 
 class SqlService {
 
+
+
     fun createSelectSql(entity: BaseEntity) : String {
         return "SELECT * FROM ${getTable(entity.javaClass)} WHERE id = ${entity.id};"
     }
@@ -28,6 +30,10 @@ class SqlService {
             DELETE FROM ${getTable(entity.javaClass)}
             WHERE id = ${entity.id};
         """.trimIndent()
+    }
+
+    fun createInsertSql(entity: BaseEntity): String {
+        return Insert(entity).createSql()
     }
 
 
@@ -91,6 +97,45 @@ class SqlService {
             return BaseEntityUpdates(entity)
                     .stringFields.toString()
                     .replace(Regex("[\\[\\]]"), " ")
+        }
+    }
+
+    private inner class Insert(val entity: BaseEntity) {
+        private val columns: MutableList<String> = ArrayList()
+        private val values: MutableList<String> = ArrayList()
+
+        init {
+            createColumnValuePairs(entity.javaClass)
+        }
+
+        fun createSql(): String{
+            return """
+                INSERT INTO 
+                ${getTable(entity.javaClass)} 
+                (${listToString(columns)})
+                VALUES
+                (${listToString(values)});
+            """
+        }
+
+        private fun createColumnValuePairs(clazz: Class<*>) {
+            if (clazz.superclass != Object::class.java)
+                createColumnValuePairs(clazz.superclass)
+            for (field: Field in clazz.declaredFields)
+                addToLists(field)
+        }
+
+        private fun addToLists(field: Field) {
+            field.trySetAccessible()
+            columns.add(field.name)
+            val value = field.get(entity).toString()
+            if (field.type == String::class.java)
+                values.add("'$value'")
+            else values.add(value)
+        }
+
+        private fun listToString(list: List<String>): String {
+            return list.toString().replace(Regex("[\\[\\]]"), " ")
         }
     }
 }
