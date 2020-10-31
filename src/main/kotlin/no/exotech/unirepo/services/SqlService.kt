@@ -7,8 +7,6 @@ import javax.persistence.Entity
 
 class SqlService {
 
-
-
     fun createSelectSql(entity: BaseEntity) : String {
         return "SELECT * FROM ${getTable(entity.javaClass)} WHERE id = ${entity.id};"
     }
@@ -17,12 +15,8 @@ class SqlService {
         return CreateTable(entity).createSql()
     }
 
-    private fun getTable(clazz: Class<out BaseEntity>): String {
-        return clazz.getAnnotation(Entity::class.java).name
-    }
-
     fun createUpdateSql(entity: BaseEntity): String {
-        return Update().createSql(entity)
+        return Update(entity).createSql()
     }
 
     fun createDeleteSql(entity: BaseEntity): String {
@@ -34,6 +28,10 @@ class SqlService {
 
     fun createInsertSql(entity: BaseEntity): String {
         return Insert(entity).createSql()
+    }
+
+    private fun getTable(clazz: Class<out BaseEntity>): String {
+        return clazz.getAnnotation(Entity::class.java).name
     }
 
     private fun handleFieldsRecursively(clazz: Class<*>, callback: (field: Field) -> Unit ) {
@@ -79,16 +77,18 @@ class SqlService {
         }
     }
 
-    private inner class Update {
-        fun createSql(entity: BaseEntity): String {
+    private inner class Update(val entity: BaseEntity) {
+        fun createSql(): String {
             return """
-                UPDATE ${getTable(entity.javaClass)} SET
-                ${stringOfUpdates(entity)}
+                UPDATE 
+                ${getTable(entity.javaClass)} 
+                SET
+                ${stringOfUpdates()}
                 WHERE id = ${entity.id};
             """.trimIndent()
         }
 
-        private fun stringOfUpdates(entity: BaseEntity): String {
+        private fun stringOfUpdates(): String {
             return BaseEntityUpdates(entity)
                     .stringFields.toString()
                     .replace(Regex("[\\[\\]]"), " ")
