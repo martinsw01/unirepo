@@ -17,6 +17,8 @@ dependencies {
 
     implementation("javax.persistence:javax.persistence-api:2.2")
 
+    implementation("com.h2database:h2:1.4.200")
+
     testImplementation(platform("org.junit:junit-bom:5.7.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation(kotlin("reflect"))
