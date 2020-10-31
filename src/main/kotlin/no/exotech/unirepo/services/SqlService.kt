@@ -14,7 +14,7 @@ class SqlService {
     }
 
     fun createTableSql(entity: BaseEntity): String {
-        return CreateTable().createSql(entity)
+        return CreateTable(entity).createSql()
     }
 
     private fun getTable(clazz: Class<out BaseEntity>): String {
@@ -36,11 +36,23 @@ class SqlService {
         return Insert(entity).createSql()
     }
 
-    private inner class CreateTable {
+    private fun handleFieldsRecursively(clazz: Class<*>, callback: (field: Field) -> Unit ) {
+        if (clazz.superclass != Object::class.java)
+            handleFieldsRecursively(clazz.superclass, callback)
+        for (field: Field in clazz.declaredFields) {
+            field.trySetAccessible()
+            callback(field)
+        }
+    }
+
+    private inner class CreateTable(val entity: BaseEntity) {
+
         private val typeNamePairs: MutableList<String> = ArrayList()
 
-        private fun addToNamePairs(field: Field) {
-            typeNamePairs.add("${getFieldType(field)} ${field.name}")
+        init {
+            handleFieldsRecursively(entity.javaClass) {
+                typeNamePairs.add("${getFieldType(it)} ${it.name}")
+            }
         }
 
         private fun typeNamePairsToString(): String {
@@ -58,16 +70,7 @@ class SqlService {
             }
         }
 
-        private fun createTypeNamePairs(clazz: Class<*>) {
-            if (clazz.superclass != Object::class.java)
-                createTypeNamePairs(clazz.superclass)
-            for (field: Field in clazz.declaredFields) {
-                addToNamePairs(field)
-            }
-        }
-
-        fun createSql(entity: BaseEntity): String {
-            createTypeNamePairs(entity.javaClass)
+        fun createSql(): String {
             return """
             CREATE TABLE IF NOT EXISTS ${getTable(entity.javaClass)} (
                 ${typeNamePairsToString()}
@@ -97,7 +100,9 @@ class SqlService {
         private val values: MutableList<String> = ArrayList()
 
         init {
-            createColumnValuePairs(entity.javaClass)
+            handleFieldsRecursively(entity.javaClass) {
+                addToLists(it)
+            }
         }
 
         fun createSql(): String{
@@ -110,16 +115,12 @@ class SqlService {
             """
         }
 
-        private fun createColumnValuePairs(clazz: Class<*>) {
-            if (clazz.superclass != Object::class.java)
-                createColumnValuePairs(clazz.superclass)
-            for (field: Field in clazz.declaredFields)
-                addToLists(field)
+        private fun addToLists(field: Field) {
+            columns.add(field.name)
+            addToValues(field)
         }
 
-        private fun addToLists(field: Field) {
-            field.trySetAccessible()
-            columns.add(field.name)
+        private fun addToValues(field: Field) {
             val value = field.get(entity).toString()
             if (field.type == String::class.java)
                 values.add("'$value'")
