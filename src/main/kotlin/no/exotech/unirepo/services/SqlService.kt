@@ -36,19 +36,11 @@ class SqlService {
         return Insert(entity).createSql()
     }
 
-
-    private data class TypeNamePair(val type: String, val name: String) {
-        override fun toString(): String {
-            return "$type $name"
-        }
-    }
-
-
     private inner class CreateTable {
-        private val typeNamePairs: MutableList<TypeNamePair> = ArrayList()
+        private val typeNamePairs: MutableList<String> = ArrayList()
 
         private fun addToNamePairs(field: Field) {
-            typeNamePairs.add(TypeNamePair(getFieldType(field), field.name))
+            typeNamePairs.add("${getFieldType(field)} ${field.name}")
         }
 
         private fun typeNamePairsToString(): String {
