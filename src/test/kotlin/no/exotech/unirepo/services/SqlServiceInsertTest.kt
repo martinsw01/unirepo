@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import javax.persistence.Entity
 
 class SqlServiceInsertTest {
-
-    private val sqlService = SqlService()
-
     @Test
     internal fun createsCorrectSql() {
         val entity = TestEntity1(1, "test", false)
@@ -17,7 +14,7 @@ class SqlServiceInsertTest {
             (id, str1, bool)
             VALUES (1, 'test', false);
         """.replace(Regex("[\n ]"), "")
-        val actualSql = sqlService.createInsertSql(entity)
+        val actualSql = SqlService.createInsertSql(entity)
                 .replace(Regex("[\n ]"), "")
         assertEquals(expectedSql, actualSql)
     }
@@ -30,7 +27,7 @@ class SqlServiceInsertTest {
             (id, str1, bool)
             VALUES (1, 'test2', true);
         """.replace(Regex("[\n ]"), "")
-        val actualSql = sqlService.createInsertSql(entity)
+        val actualSql = SqlService.createInsertSql(entity)
                 .replace(Regex("[\n ]"), "")
         assertEquals(expectedSql, actualSql)
     }

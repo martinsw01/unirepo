@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import javax.persistence.Entity
 
 class SqlServiceDeleteTest {
-
-    private val sqlService = SqlService()
-
     @Test
     internal fun createsCorrectSql() {
         val entity = TestEntity(1)
@@ -16,7 +13,7 @@ class SqlServiceDeleteTest {
             DELETE FROM test_table1
             WHERE id = 1;
         """.replace(Regex("[\n ]"), "")
-        val actualSql = sqlService.createDeleteSql(entity)
+        val actualSql = SqlService.createDeleteSql(entity)
                 .replace(Regex("[\n ]"), "")
         assertEquals(expectedSql, actualSql)
     }

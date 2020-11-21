@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test
 import javax.persistence.Entity
 
 class SqlServiceCreateTableTest {
-    private val sqlService = SqlService()
-
     @Test
     internal fun createsCorrectSql() {
         val entity = TestEntity1(5, "string1")
@@ -18,7 +16,7 @@ class SqlServiceCreateTableTest {
                 varchar(250) str1
             );
         """.replace(Regex("[\n ]"), "")
-        val actualSql = sqlService.createTableSql(entity).replace(Regex("[\n ]"), "")
+        val actualSql = SqlService.createTableSql(entity).replace(Regex("[\n ]"), "")
         print(actualSql)
         assertEquals(expectedSql, actualSql)
     }
@@ -32,7 +30,7 @@ class SqlServiceCreateTableTest {
                 varchar(250) str2
             );
         """.replace(Regex("[\n ]"), "")
-        val actualSql = sqlService.createTableSql(entity)
+        val actualSql = SqlService.createTableSql(entity)
                 .replace(Regex("[\n ]"), "")
         assertEquals(expectedSql, actualSql)
     }
@@ -40,7 +38,7 @@ class SqlServiceCreateTableTest {
     @Test
     internal fun throwsException_WhenTypeNotSupported() {
         val entity = TestEntity3(3, this)
-        assertThrows(NotImplementedError::class.java) { sqlService.createTableSql(entity) }
+        assertThrows(NotImplementedError::class.java) { SqlService.createTableSql(entity) }
     }
 
     @Entity(name = "test_table1")
