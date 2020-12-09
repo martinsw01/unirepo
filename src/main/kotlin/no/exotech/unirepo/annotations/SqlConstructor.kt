@@ -6,4 +6,4 @@ import kotlin.annotation.AnnotationRetention.RUNTIME
 @Retention(value = RUNTIME)
 @Target(CONSTRUCTOR)
 
-annotation class SqlConstructor()
+annotation class SqlConstructor
