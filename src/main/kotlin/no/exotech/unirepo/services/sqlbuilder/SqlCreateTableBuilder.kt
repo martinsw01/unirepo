@@ -1,12 +1,11 @@
 package no.exotech.unirepo.services.sqlbuilder
 
-import no.exotech.unirepo.entities.BaseEntity
 import no.exotech.unirepo.models.PreparedStatementValues
 import no.exotech.unirepo.services.SqlUtils
 import java.lang.reflect.Field
 import javax.persistence.Id
 
-class SqlCreateTableBuilder(val clazz: Class<out BaseEntity>) {
+class SqlCreateTableBuilder(val clazz: Class<out Any>) {
     private val typeNamePairs: MutableList<String> = ArrayList()
 
     init {

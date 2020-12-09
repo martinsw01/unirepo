@@ -3,18 +3,19 @@ package no.exotech.unirepo.services
 import no.exotech.unirepo.entities.BaseEntity
 import no.exotech.unirepo.models.PreparedStatementValues
 import no.exotech.unirepo.services.sqlbuilder.DefaultSqlBuilder
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import java.util.UUID
 import javax.persistence.Entity
 
 class SqlBuilderUpdateTest {
-    val sqlBuilder = DefaultSqlBuilder()
+    private val sqlBuilder = DefaultSqlBuilder()
     
     @Test
     internal fun createsCorrectSql() {
-        val entity = TestEntity(UUID(0, 9), "string", null)
-        val actualSql = sqlBuilder.createUpdateSql(entity)
+        val id = UUID(0, 9)
+        val entity = TestEntity(id, "string", null)
+        val actualSql = sqlBuilder.createUpdateSql(entity, id)
         val expectedSql = PreparedStatementValues(
                 """
                     UPDATE test_table1
@@ -22,7 +23,7 @@ class SqlBuilderUpdateTest {
                     str1 = ?
                     WHERE id = ?;
                 """.trimIndent(),
-                listOf("string", UUID(0, 9))
+                listOf("string", id)
         )
 
         assertEquals(expectedSql, actualSql)
@@ -30,8 +31,9 @@ class SqlBuilderUpdateTest {
 
     @Test
     internal fun createsCorrectSql_WhitMultipleUpdates() {
-        val entity = TestEntity(UUID(0, 3), "string", "string2")
-        val actualSql = sqlBuilder.createUpdateSql(entity)
+        val id = UUID(0, 3)
+        val entity = TestEntity(id, "string", "string2")
+        val actualSql = sqlBuilder.createUpdateSql(entity, id)
         val expectedSql = PreparedStatementValues(
                 """
                     UPDATE test_table1
@@ -39,7 +41,7 @@ class SqlBuilderUpdateTest {
                     str1 = ?, camel_case = ?
                     WHERE id = ?;
                 """.trimIndent(),
-                listOf("string", "string2", UUID(0, 3))
+                listOf("string", "string2", id)
         )
         assertEquals(expectedSql, actualSql)
     }

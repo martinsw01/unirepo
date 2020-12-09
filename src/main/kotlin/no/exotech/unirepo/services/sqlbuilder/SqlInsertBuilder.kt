@@ -1,12 +1,11 @@
 package no.exotech.unirepo.services.sqlbuilder
 
-import no.exotech.unirepo.entities.BaseEntity
 import no.exotech.unirepo.models.PreparedStatementValues
 import no.exotech.unirepo.services.SqlUtils
 import no.exotech.unirepo.services.SqlUtils.Companion.getTable
 import java.lang.reflect.Field
 
-class SqlInsertBuilder(val entity: BaseEntity) {
+class SqlInsertBuilder(val entity: Any) {
     private val columns: MutableList<String> = ArrayList()
     private val values: MutableList<String> = ArrayList()
 

@@ -1,17 +1,16 @@
 package no.exotech.unirepo.updates
 
-import no.exotech.unirepo.entities.BaseEntity
 import no.exotech.unirepo.services.SqlUtils
 import java.lang.reflect.Field
-import javax.persistence.Transient
 import javax.persistence.Id
+import javax.persistence.Transient
 
 
-class EntityUpdates private constructor(private val entity: BaseEntity) {
+class EntityUpdates private constructor(private val entity: Any) {
 
     companion object {
         @JvmStatic
-        fun <Entity : BaseEntity> of(entity: Entity) : Pair<List<String>, List<Any>> {
+        fun of(entity: Any) : Pair<List<String>, List<Any>> {
             val updates = EntityUpdates(entity)
             return Pair(
                     updates.columns.toList(),

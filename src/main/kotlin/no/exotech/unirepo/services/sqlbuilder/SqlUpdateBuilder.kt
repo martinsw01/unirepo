@@ -1,14 +1,13 @@
 package no.exotech.unirepo.services.sqlbuilder
 
-import no.exotech.unirepo.entities.BaseEntity
 import no.exotech.unirepo.models.PreparedStatementValues
 import no.exotech.unirepo.services.SqlUtils.Companion.getTable
 import no.exotech.unirepo.updates.EntityUpdates
 
-class SqlUpdateBuilder(val entity: BaseEntity) {
+class SqlUpdateBuilder(val entity: Any, val id: Any) {
     fun build(): PreparedStatementValues {
         val (columns, values) = EntityUpdates.of(entity)
-        val prepStmtValues = listOf(*values.toTypedArray(), entity.id)
+        val prepStmtValues = listOf(*values.toTypedArray(), id)
         return PreparedStatementValues(
                 """
                     UPDATE ${getTable(entity.javaClass)}

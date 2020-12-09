@@ -3,8 +3,8 @@ package no.exotech.unirepo.services
 import no.exotech.unirepo.entities.BaseEntity
 import no.exotech.unirepo.models.PreparedStatementValues
 import no.exotech.unirepo.services.sqlbuilder.DefaultSqlBuilder
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import javax.persistence.Entity
 
 class SqlBuilderInsertTest {

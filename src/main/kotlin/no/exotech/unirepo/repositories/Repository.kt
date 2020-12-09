@@ -1,6 +1,5 @@
 package no.exotech.unirepo.repositories
 
-import no.exotech.unirepo.entities.BaseEntity
 import no.exotech.unirepo.models.PreparedStatementValues
 import no.exotech.unirepo.services.entitybuilder.DefaultEmptyEntityBuilder
 import no.exotech.unirepo.services.entitybuilder.EntityBuilder
@@ -20,34 +19,34 @@ class Repository(
         private val entityBuilder: EntityBuilder = EntityBuilder(DefaultEmptyEntityBuilder())
 ) : BaseRepository(className, url, user, psw), CrudRepository {
 
-    override fun createTable(clazz: Class<out BaseEntity>) {
+    override fun createTable(clazz: Class<out Any>) {
         createPrepStm(sqlBuilder.createTableSql(clazz)) {
             it.execute()
         }
     }
 
-    override fun <Entity : BaseEntity> insert(entity: Entity): UUID {
+    override fun insert(entity: Any): UUID {
         return createPrepStm(sqlBuilder.createInsertSql(entity)) {
             it.executeUpdate()
             getId(it)
         }
     }
 
-    override fun <Entity : BaseEntity> select(entityClazz: Class<Entity>, id: UUID): Entity {
+    override fun <Entity : Any> select(entityClazz: Class<Entity>, id: UUID): Entity {
         return createPrepStm(sqlBuilder.createSelectSql(entityClazz, id)) {
             val rs = it.executeQuery()
             entityBuilder.createEntitiesOfResultSet(rs, entityClazz)[0]
         }
     }
 
-    override fun delete(clazz: Class<out BaseEntity>, id: UUID) {
+    override fun delete(clazz: Class<out Any>, id: UUID) {
         createPrepStm(sqlBuilder.createDeleteSql(clazz, id)) {
             it.execute()
         }
     }
 
-    fun <Entity : BaseEntity> update(entity: Entity) {
-        createPrepStm(sqlBuilder.createUpdateSql(entity)) {
+    fun update(entity: Any, id: Any) {
+        createPrepStm(sqlBuilder.createUpdateSql(entity, id)) {
             it.executeUpdate()
         }
     }

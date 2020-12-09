@@ -1,6 +1,5 @@
 package no.exotech.unirepo.services
 
-import no.exotech.unirepo.entities.BaseEntity
 import java.lang.reflect.Field
 import javax.persistence.Entity
 
@@ -28,7 +27,7 @@ class SqlUtils {
         }
 
         @JvmStatic
-        fun getTable(clazz: Class<out BaseEntity>): String {
+        fun getTable(clazz: Class<out Any>): String {
             return clazz.getAnnotation(Entity::class.java).name
         }
     }

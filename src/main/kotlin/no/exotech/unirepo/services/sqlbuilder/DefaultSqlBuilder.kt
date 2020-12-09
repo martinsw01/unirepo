@@ -1,27 +1,26 @@
 package no.exotech.unirepo.services.sqlbuilder
 
-import no.exotech.unirepo.entities.BaseEntity
 import no.exotech.unirepo.models.PreparedStatementValues
 import java.util.UUID
 
 class DefaultSqlBuilder : SqlBuilder {
-    override fun <Entity : BaseEntity> createSelectSql(clazz: Class<Entity>, id: UUID): PreparedStatementValues {
+    override fun createSelectSql(clazz: Class<out Any>, id: UUID): PreparedStatementValues {
         return SqlSelectBuilder.build(clazz, id)
     }
 
-    override fun createTableSql(clazz: Class<out BaseEntity>): PreparedStatementValues {
+    override fun createTableSql(clazz: Class<out Any>): PreparedStatementValues {
         return SqlCreateTableBuilder(clazz).build()
     }
 
-    override fun createUpdateSql(entity: BaseEntity): PreparedStatementValues {
-        return SqlUpdateBuilder(entity).build()
+    override fun createUpdateSql(entity: Any, id: Any): PreparedStatementValues {
+        return SqlUpdateBuilder(entity, id).build()
     }
 
-    override fun createDeleteSql(clazz: Class<out BaseEntity>, id: UUID): PreparedStatementValues {
+    override fun createDeleteSql(clazz: Class<out Any>, id: UUID): PreparedStatementValues {
         return SqlDeleteBuilder.build(clazz, id)
     }
 
-    override fun createInsertSql(entity: BaseEntity): PreparedStatementValues {
+    override fun createInsertSql(entity: Any): PreparedStatementValues {
         return SqlInsertBuilder(entity).build()
     }
 }

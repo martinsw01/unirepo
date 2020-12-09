@@ -1,17 +1,16 @@
 package no.exotech.unirepo.services.entitybuilder
 
 import no.exotech.unirepo.annotations.SqlConstructor
-import no.exotech.unirepo.entities.BaseEntity
 import java.lang.reflect.Constructor
 import kotlin.streams.asStream
 
 class DefaultEmptyEntityBuilder : EmptyEntityBuilder {
-    override fun <Entity : BaseEntity> build(clazz: Class<Entity>, vararg args: Any): Entity {
+    override fun <Entity> build(clazz: Class<Entity>, vararg args: Any): Entity {
         return getConstructor(clazz).newInstance(*args)
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <Entity : BaseEntity> getConstructor(clazz: Class<Entity>) : Constructor<Entity> {
+    private fun <Entity> getConstructor(clazz: Class<Entity>) : Constructor<Entity> {
         try {
             return clazz.constructors.asSequence().asStream()
                     .filter { it.isAnnotationPresent(SqlConstructor::class.java) }

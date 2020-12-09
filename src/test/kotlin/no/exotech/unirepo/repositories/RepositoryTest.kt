@@ -72,7 +72,7 @@ internal class RepositoryTest {
     @Test
     internal fun updatesEntity() {
         val id = repository.insert(TestEntity1("Martin"))
-        repository.update(TestEntity1(id, "Jørgen"))
+        repository.update(TestEntity1(id, "Jørgen"), id)
         val actualEntity1 = repository.select(TestEntity1::class.java, id)
         assertEquals("Jørgen", actualEntity1.name)
         assertEquals(id, actualEntity1.id)
