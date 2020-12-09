@@ -8,7 +8,6 @@ import no.exotech.unirepo.services.sqlbuilder.SqlBuilder
 import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.sql.Statement
-import java.util.UUID
 
 class Repository(
         className: String,
@@ -25,21 +24,21 @@ class Repository(
         }
     }
 
-    override fun insert(entity: Any): UUID {
+    override fun <ID : Any> insert(entity: Any, clazz: Class<ID>): ID {
         return createPrepStm(sqlBuilder.createInsertSql(entity)) {
             it.executeUpdate()
-            getId(it)
+            getId(it, clazz)
         }
     }
 
-    override fun <Entity : Any> select(entityClazz: Class<Entity>, id: UUID): Entity {
+    override fun <Entity : Any> select(entityClazz: Class<Entity>, id: Any): Entity {
         return createPrepStm(sqlBuilder.createSelectSql(entityClazz, id)) {
             val rs = it.executeQuery()
             entityBuilder.createEntitiesOfResultSet(rs, entityClazz)[0]
         }
     }
 
-    override fun delete(clazz: Class<out Any>, id: UUID) {
+    override fun delete(clazz: Class<out Any>, id: Any) {
         createPrepStm(sqlBuilder.createDeleteSql(clazz, id)) {
             it.execute()
         }
@@ -64,10 +63,10 @@ class Repository(
     }
 
     @Throws(SQLException::class)
-    private fun getId(prepStm: PreparedStatement) : UUID {
+    private fun <ID : Any> getId(prepStm: PreparedStatement, clazz: Class<ID>) : ID {
         return actOnResultSet(prepStm.generatedKeys) {
             if (it.next()) {
-                return@actOnResultSet it.getObject(1, UUID::class.java)
+                return@actOnResultSet it.getObject(1, clazz)
             }
             else {
                 throw SQLException("The id of was not found. Prepared statement: $prepStm")

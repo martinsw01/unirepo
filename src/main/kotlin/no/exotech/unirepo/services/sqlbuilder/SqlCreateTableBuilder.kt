@@ -3,7 +3,8 @@ package no.exotech.unirepo.services.sqlbuilder
 import no.exotech.unirepo.models.PreparedStatementValues
 import no.exotech.unirepo.services.SqlUtils
 import java.lang.reflect.Field
-import javax.persistence.Id
+import java.util.UUID
+import javax.persistence.Column
 
 class SqlCreateTableBuilder(val clazz: Class<out Any>) {
     private val typeNamePairs: MutableList<String> = ArrayList()
@@ -11,7 +12,7 @@ class SqlCreateTableBuilder(val clazz: Class<out Any>) {
     init {
         SqlUtils.traverseFieldsInClass(clazz) {
             val column = SqlUtils.camelToSnakeCase(it.name)
-            typeNamePairs.add("$column ${getFieldType(it)}")
+            typeNamePairs.add("$column ${getColumnDefinition(it)}")
         }
     }
 
@@ -19,14 +20,19 @@ class SqlCreateTableBuilder(val clazz: Class<out Any>) {
         return typeNamePairs.joinToString {it}
     }
 
-    private fun getFieldType(field: Field): String {
-        if (field.isAnnotationPresent(Id::class.java))
-            return "UUID DEFAULT RANDOM_UUID() NOT NULL"
+    private fun getColumnDefinition(field: Field): String {
+        if (field.isAnnotationPresent(Column::class.java))
+            return field.getAnnotation(Column::class.java).columnDefinition
+        return getDefaultColumnDefinition(field)
+    }
+
+    private fun getDefaultColumnDefinition(field: Field) : String {
         return when (field.type) {
+            UUID::class.java -> "UUID DEFAULT RANDOM_UUID() NOT NULL"
             Int::class.java -> "INTEGER"
-            String::class.java -> "VARCHAR(250)"
+            String::class.java -> "VARCHAR(255)"
             Boolean::class.java -> "BOOLEAN"
-            Class::class.java -> "VARCHAR(250)"
+            Class::class.java -> "VARCHAR(255)"
             else -> throw NotImplementedError("${field.type} not yet supported")
         }
     }

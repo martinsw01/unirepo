@@ -30,7 +30,7 @@ internal class RepositoryTest {
 
     @Test
     internal fun selectAndCreateCorrectEntity() {
-        val id = repository.insert(TestEntity1("Martin"))
+        val id = repository.insert(TestEntity1("Martin"), UUID::class.java)
         val newEntity1 = repository.select(TestEntity1::class.java, id)
         assertEquals("Martin", newEntity1.name)
         assertEquals(id, newEntity1.id)
@@ -38,7 +38,7 @@ internal class RepositoryTest {
 
     @Test
     internal fun throwsExceptionWhenHasNoConstructor() {
-        val id = repository.insert(TestEntity2("Martin"))
+        val id = repository.insert(TestEntity2("Martin"), UUID::class.java)
         assertThrows(NoSuchMethodException::class.java) {
             repository.select(TestEntity2::class.java, id)
         }
@@ -46,7 +46,7 @@ internal class RepositoryTest {
 
     @Test
     internal fun throwsExceptionWhenIsPrivate() {
-        val id = repository.insert(TestEntity3())
+        val id = repository.insert(TestEntity3(), UUID::class.java)
         assertThrows(IllegalAccessException::class.java) {
             repository.select(TestEntity3::class.java, id)
         }
@@ -54,7 +54,7 @@ internal class RepositoryTest {
 
     @Test
     internal fun throwsExceptionsWhenAnnotationNotPresent() {
-        val id = repository.insert(TestEntity4())
+        val id = repository.insert(TestEntity4(), UUID::class.java)
         assertThrows(NoSuchMethodException::class.java) {
             repository.select(TestEntity4::class.java, id)
         }
@@ -71,7 +71,7 @@ internal class RepositoryTest {
 
     @Test
     internal fun updatesEntity() {
-        val id = repository.insert(TestEntity1("Martin"))
+        val id = repository.insert(TestEntity1("Martin"), UUID::class.java)
         repository.update(TestEntity1(id, "Jørgen"), id)
         val actualEntity1 = repository.select(TestEntity1::class.java, id)
         assertEquals("Jørgen", actualEntity1.name)

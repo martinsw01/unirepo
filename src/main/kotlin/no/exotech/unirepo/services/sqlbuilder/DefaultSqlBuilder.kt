@@ -1,10 +1,9 @@
 package no.exotech.unirepo.services.sqlbuilder
 
 import no.exotech.unirepo.models.PreparedStatementValues
-import java.util.UUID
 
 class DefaultSqlBuilder : SqlBuilder {
-    override fun createSelectSql(clazz: Class<out Any>, id: UUID): PreparedStatementValues {
+    override fun createSelectSql(clazz: Class<out Any>, id: Any): PreparedStatementValues {
         return SqlSelectBuilder.build(clazz, id)
     }
 
@@ -16,7 +15,7 @@ class DefaultSqlBuilder : SqlBuilder {
         return SqlUpdateBuilder(entity, id).build()
     }
 
-    override fun createDeleteSql(clazz: Class<out Any>, id: UUID): PreparedStatementValues {
+    override fun createDeleteSql(clazz: Class<out Any>, id: Any): PreparedStatementValues {
         return SqlDeleteBuilder.build(clazz, id)
     }
 

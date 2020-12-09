@@ -1,10 +1,8 @@
 package no.exotech.unirepo.repositories
 
-import java.util.UUID
-
 interface CrudRepository {
     fun createTable(clazz: Class<out Any>)
-    fun insert(entity: Any) : UUID
-    fun <Entity : Any> select(entityClazz: Class<Entity>, id: UUID) : Entity
-    fun delete(clazz: Class<out Any>, id: UUID)
+    fun <ID : Any> insert(entity: Any, clazz: Class<ID>) : ID   // Returns id
+    fun <Entity : Any> select(entityClazz: Class<Entity>, id: Any) : Entity
+    fun delete(clazz: Class<out Any>, id: Any)
 }
