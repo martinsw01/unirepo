@@ -96,20 +96,6 @@ internal class RepositoryTest {
         constructor(id: UUID) : super(id) {
             name = ""
         }
-        override fun equals(other: Any?): Boolean {
-            if (other is TestEntity1) {
-                return (this.name == other.name) and (this.id == other.id)
-            }
-            return super.equals(other)
-        }
-
-        override fun hashCode(): Int {
-            return super.hashCode() + 31 * this.id.hashCode() + 17 * this.name.hashCode()
-        }
-
-        override fun toString(): String {
-            return "$id, $name"
-        }
     }
     @Entity(name = "test2")
     class TestEntity2(val thing: String) : BaseEntity()
