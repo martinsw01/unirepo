@@ -1,8 +1,8 @@
 package no.exotech.unirepo.services.sqlbuilder
 
 import no.exotech.unirepo.models.PreparedStatementValues
-import no.exotech.unirepo.services.SqlComparator
-import no.exotech.unirepo.services.SqlComparatorImpl
+import no.exotech.unirepo.requirements.SqlRequirements
+import no.exotech.unirepo.requirements.SqlRequirementsImpl
 import no.exotech.unirepo.services.SqlUtils.Companion.getTable
 
 class SqlSelectBuilder {
@@ -16,39 +16,39 @@ class SqlSelectBuilder {
         }
     }
 
-    class Many(private val clazz: Class<out Any>, sqlComparator: SqlComparator) {
+    class Many(private val clazz: Class<out Any>, sqlRequirements: SqlRequirements) {
         private val values = mutableListOf<Any>()
-        private val sqlComparator = sqlComparator as SqlComparatorImpl
+        private val sqlRequirements = sqlRequirements as SqlRequirementsImpl
 
         fun buildMultiple() : PreparedStatementValues {
             return PreparedStatementValues(
                     """
                         SELECT * FROM ${getTable(clazz)}
                         WHERE
-                        ${joinToString(sqlComparator.asList())}
+                        ${joinToString(sqlRequirements.asList())}
                     """.trimIndent(),
                     values
             )
         }
 
-        private fun joinToString(comparators: List<Pair<String, Any>>) : String {
-            return comparators.joinToString(" ") { (logicalOperator, comparator) ->
-                "$logicalOperator ${handleComparator(comparator)}"
+        private fun joinToString(requirements: List<Pair<String, Any>>) : String {
+            return requirements.joinToString(" ") { (logicalOperator, requirement) ->
+                "$logicalOperator ${handleRequirement(requirement)}"
             }
         }
 
-        private fun handleComparator(comparator: Any) : String {
-            return when (comparator) {
-                is SqlComparatorImpl.Comparator -> {
-                    values.add(comparator.value)
-                    "${comparator.column} ${comparator.comparisonOperator} ?"
+        private fun handleRequirement(requirements: Any) : String {
+            return when (requirements) {
+                is SqlRequirementsImpl.Requirement -> {
+                    values.add(requirements.value)
+                    "${requirements.column} ${requirements.comparisonOperator} ?"
                 }
-                is SqlComparatorImpl ->
-                    "(${joinToString(comparator.asList())})"
+                is SqlRequirementsImpl ->
+                    "(${joinToString(requirements.asList())})"
                 else -> throw IllegalArgumentException(
-                        "Should be ${SqlComparatorImpl::class} " +
-                                "or ${SqlComparatorImpl.Comparator::class}, " +
-                                "but was ${comparator.javaClass}")
+                        "Should be ${SqlRequirementsImpl::class} " +
+                                "or ${SqlRequirementsImpl.Requirement::class}, " +
+                                "but was ${requirements.javaClass}")
             }
         }
     }

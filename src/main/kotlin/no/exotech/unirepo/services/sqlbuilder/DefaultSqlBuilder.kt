@@ -1,8 +1,7 @@
 package no.exotech.unirepo.services.sqlbuilder
 
 import no.exotech.unirepo.models.PreparedStatementValues
-import no.exotech.unirepo.services.SqlComparator
-import no.exotech.unirepo.services.SqlComparatorImpl
+import no.exotech.unirepo.requirements.SqlRequirements
 
 class DefaultSqlBuilder : SqlBuilder {
     override fun createSelectSql(clazz: Class<out Any>, id: Any): PreparedStatementValues {
@@ -25,7 +24,7 @@ class DefaultSqlBuilder : SqlBuilder {
         return SqlInsertBuilder(entity).build()
     }
 
-    override fun createSelectManySql(clazz: Class<out Any>, sqlComparator: SqlComparator): PreparedStatementValues {
-        return SqlSelectBuilder.Many(clazz, sqlComparator).buildMultiple()
+    override fun createSelectManySql(clazz: Class<out Any>, sqlRequirements: SqlRequirements): PreparedStatementValues {
+        return SqlSelectBuilder.Many(clazz, sqlRequirements).buildMultiple()
     }
 }
