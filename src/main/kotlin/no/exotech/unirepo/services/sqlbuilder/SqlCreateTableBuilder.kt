@@ -30,6 +30,7 @@ class SqlCreateTableBuilder(val clazz: Class<out Any>) {
         return when (field.type) {
             UUID::class.java -> "UUID DEFAULT RANDOM_UUID() NOT NULL"
             Int::class.java -> "INTEGER"
+            Integer::class.java -> "INTEGER"
             String::class.java -> "VARCHAR(255)"
             Boolean::class.java -> "BOOLEAN"
             Class::class.java -> "VARCHAR(255)"
