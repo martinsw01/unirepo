@@ -2,6 +2,7 @@ package no.exotech.unirepo.services
 
 import java.lang.reflect.Field
 import javax.persistence.Entity
+import kotlin.reflect.KProperty1
 
 class SqlUtils {
     companion object {
@@ -29,6 +30,11 @@ class SqlUtils {
         @JvmStatic
         fun getTable(clazz: Class<out Any>): String {
             return clazz.getAnnotation(Entity::class.java).name
+        }
+
+        @JvmStatic
+        fun getMemberClass(member: KProperty1<*, *>) : Class<out Any> {
+            return Class.forName(member.returnType.toString())
         }
     }
 }

@@ -1,6 +1,7 @@
 package no.exotech.unirepo.repositories
 
 import no.exotech.unirepo.models.PreparedStatementValues
+import no.exotech.unirepo.requirements.SqlRequirements
 import no.exotech.unirepo.services.entitybuilder.DefaultEmptyEntityBuilder
 import no.exotech.unirepo.services.entitybuilder.EntityBuilder
 import no.exotech.unirepo.services.sqlbuilder.DefaultSqlBuilder
@@ -35,6 +36,13 @@ class Repository(
         return createPrepStm(sqlBuilder.createSelectSql(entityClazz, id)) {
             val rs = it.executeQuery()
             entityBuilder.createEntitiesOfResultSet(rs, entityClazz)[0]
+        }
+    }
+
+    override fun <Entity : Any> selectMany(clazz: Class<Entity>, requirement: SqlRequirements): List<Entity> {
+        return createPrepStm(sqlBuilder.createSelectManySql(clazz, requirement)) {
+            val rs = it.executeQuery()
+            entityBuilder.createEntitiesOfResultSet(rs, clazz)
         }
     }
 
@@ -75,6 +83,6 @@ class Repository(
     }
 
     fun dropAllObjects() {
-        createPrepStm(PreparedStatementValues("DROP ALL OBJECTS", emptyList())) {}
+        createPrepStm(PreparedStatementValues("DROP ALL OBJECTS")) {}
     }
 }

@@ -2,7 +2,6 @@ package no.exotech.unirepo.repositories
 
 import no.exotech.unirepo.annotations.SqlConstructor
 import no.exotech.unirepo.entities.BaseEntity
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeAll
@@ -76,11 +75,6 @@ internal class RepositoryTest {
         val actualEntity1 = repository.select(TestEntity1::class.java, id)
         assertEquals("Jørgen", actualEntity1.name)
         assertEquals(id, actualEntity1.id)
-    }
-
-    @AfterAll
-    internal fun tearDown() {
-        repository.dropAllObjects()
     }
 
     @Entity(name = "test1")
