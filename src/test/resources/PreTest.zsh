@@ -1,6 +1,6 @@
 file="$1"
 
-if [ -f "$file" ] ; then
+if [ -f "$file" ]; then
   echo "Deleting $file"
   rm "$file"
 else
