@@ -10,7 +10,7 @@ import javax.persistence.Entity
 
 class SqlBuilderUpdateTest {
     private val sqlBuilder = DefaultSqlBuilder()
-    
+
     @Test
     internal fun createsCorrectSql() {
         val id = UUID(0, 9)

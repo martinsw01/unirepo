@@ -8,7 +8,7 @@ import no.exotech.unirepo.services.SqlUtils.Companion.getTable
 class SqlSelectBuilder {
     companion object {
         @JvmStatic
-        fun buildOne(clazz: Class<out Any>, id: Any) : PreparedStatementValues {
+        fun buildOne(clazz: Class<out Any>, id: Any): PreparedStatementValues {
             return PreparedStatementValues(
                     "SELECT * FROM ${getTable(clazz)} WHERE id = ?;",
                     listOf(id)
@@ -20,7 +20,7 @@ class SqlSelectBuilder {
         private val values = mutableListOf<Any>()
         private val sqlRequirements = sqlRequirements as SqlRequirementsImpl
 
-        fun buildMultiple() : PreparedStatementValues {
+        fun buildMultiple(): PreparedStatementValues {
             return PreparedStatementValues(
                     """
                         SELECT * FROM ${getTable(clazz)}
@@ -31,13 +31,13 @@ class SqlSelectBuilder {
             )
         }
 
-        private fun joinToString(requirements: List<Pair<String, Any>>) : String {
+        private fun joinToString(requirements: List<Pair<String, Any>>): String {
             return requirements.joinToString(" ") { (logicalOperator, requirement) ->
                 "$logicalOperator ${handleRequirement(requirement)}"
             }
         }
 
-        private fun handleRequirement(requirements: Any) : String {
+        private fun handleRequirement(requirements: Any): String {
             return when (requirements) {
                 is SqlRequirementsImpl.Requirement -> {
                     values.add(requirements.value)

@@ -10,7 +10,7 @@ class EntityUpdates private constructor(private val entity: Any) {
 
     companion object {
         @JvmStatic
-        fun of(entity: Any) : Pair<List<String>, List<Any>> {
+        fun of(entity: Any): Pair<List<String>, List<Any>> {
             val updates = EntityUpdates(entity)
             return Pair(
                     updates.columns.toList(),

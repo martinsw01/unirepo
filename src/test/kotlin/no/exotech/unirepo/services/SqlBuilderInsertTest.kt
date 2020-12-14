@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import javax.persistence.Entity
 
 class SqlBuilderInsertTest {
-    val sqlBuilder = DefaultSqlBuilder()
+    private val sqlBuilder = DefaultSqlBuilder()
 
     @Test
     internal fun createsCorrectSql() {

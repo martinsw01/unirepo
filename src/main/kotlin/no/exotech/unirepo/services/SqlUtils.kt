@@ -7,7 +7,7 @@ import kotlin.reflect.KProperty1
 class SqlUtils {
     companion object {
         @JvmStatic
-        fun camelToSnakeCase(str: String) : String {
+        fun camelToSnakeCase(str: String): String {
             return str.replace(Regex("([a-z])([A-Z]+)"), "$1_$2")
                     .toLowerCase()
         }
@@ -23,7 +23,7 @@ class SqlUtils {
         }
 
         @JvmStatic
-        fun joinToQMs(list: List<String>) : String {
+        fun joinToQMs(list: List<String>): String {
             return list.joinToString { "?" }
         }
 
@@ -33,7 +33,7 @@ class SqlUtils {
         }
 
         @JvmStatic
-        fun getMemberClass(member: KProperty1<*, *>) : Class<out Any> {
+        fun getMemberClass(member: KProperty1<*, *>): Class<out Any> {
             return Class.forName(member.returnType.toString())
         }
     }

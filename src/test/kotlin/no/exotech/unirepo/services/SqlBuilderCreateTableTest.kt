@@ -11,7 +11,7 @@ import javax.persistence.Entity
 
 class SqlBuilderCreateTableTest {
     private val sqlBuilder = DefaultSqlBuilder()
-    
+
     @Test
     internal fun createsCorrectSql() {
         val expectedSql = PreparedStatementValues(

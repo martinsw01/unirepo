@@ -46,7 +46,7 @@ class SqlBuilderSelectManyTest {
         val column = TestEntity1::number.name
         val comparison =
                 require(column, GREATER_THAN, 1)
-                .and(column, LESS_THAN, 3)
+                        .and(column, LESS_THAN, 3)
         val actualSql = sqlBuilder.createSelectManySql(TestEntity1::class.java, comparison)
         assertEquals(expectedSql, actualSql)
     }
@@ -64,8 +64,8 @@ class SqlBuilderSelectManyTest {
         val column = TestEntity1::number.name
         val comparison =
                 require(column, GREATER_THAN, 1)
-                .and(column, LESS_THAN, 3)
-                .and(column, GREATER_THAN_OR_EQUAL, 10)
+                        .and(column, LESS_THAN, 3)
+                        .and(column, GREATER_THAN_OR_EQUAL, 10)
         val actualSql = sqlBuilder.createSelectManySql(TestEntity1::class.java, comparison)
         assertEquals(expectedSql, actualSql)
     }
@@ -83,15 +83,15 @@ class SqlBuilderSelectManyTest {
         val column = TestEntity1::number.name
         val comparison =
                 require(column, GREATER_THAN, 1)
-                .and(
-                        require(column, NOT_EQUAL, 3)
-                                .or(column, GREATER_THAN_OR_EQUAL, 10)
-                                .or(
-                                        require(require("string", EQUAL, "hello world")
-                                                .and(column, LESS_THAN_OR_EQUAL, 20)
-                                        ))
-                )
-                .and(column, EQUAL, 8)
+                        .and(
+                                require(column, NOT_EQUAL, 3)
+                                        .or(column, GREATER_THAN_OR_EQUAL, 10)
+                                        .or(
+                                                require(require("string", EQUAL, "hello world")
+                                                        .and(column, LESS_THAN_OR_EQUAL, 20)
+                                                ))
+                        )
+                        .and(column, EQUAL, 8)
 
         val actualSql = sqlBuilder.createSelectManySql(TestEntity1::class.java, comparison)
         assertEquals(expectedSql, actualSql)

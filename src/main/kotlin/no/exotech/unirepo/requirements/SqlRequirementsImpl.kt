@@ -13,30 +13,30 @@ open class SqlRequirementsImpl : AndOperation, OrOperator {
 
     private val requirements: MutableList<Pair<String, Any>>
 
-    fun asList() : List<Pair<String, Any>> {
+    fun asList(): List<Pair<String, Any>> {
         return requirements.toList()
     }
 
     override fun and(column: String,
-            comparisonOperator: String,
-            value: Any) : AndOperation {
+                     comparisonOperator: String,
+                     value: Any): AndOperation {
         addToRequirements(AND, column, comparisonOperator, value)
         return this
     }
 
-    override fun and(sqlRequirements: SqlRequirements) : AndOperation {
+    override fun and(sqlRequirements: SqlRequirements): AndOperation {
         requirements.add(Pair(AND, sqlRequirements))
         return this
     }
 
     override fun or(column: String,
-           comparisonOperator: String,
-           value: Any) : OrOperator {
+                    comparisonOperator: String,
+                    value: Any): OrOperator {
         addToRequirements(OR, column, comparisonOperator, value)
         return this
     }
 
-    override fun or(sqlRequirements: SqlRequirements) : OrOperator {
+    override fun or(sqlRequirements: SqlRequirements): OrOperator {
         requirements.add(Pair(OR, sqlRequirements))
         return this
     }
@@ -60,11 +60,11 @@ open class SqlRequirementsImpl : AndOperation, OrOperator {
 
         fun require(column: String,
                     comparisonOperator: String,
-                    value: Any) : SqlRequirementsImpl {
+                    value: Any): SqlRequirementsImpl {
             return SqlRequirementsImpl(column, comparisonOperator, value)
         }
 
-        fun require(sqlRequirements: SqlRequirements) : SqlRequirementsImpl {
+        fun require(sqlRequirements: SqlRequirements): SqlRequirementsImpl {
             return SqlRequirementsImpl(sqlRequirements)
         }
     }

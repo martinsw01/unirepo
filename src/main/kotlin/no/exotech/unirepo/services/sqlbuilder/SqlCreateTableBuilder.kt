@@ -17,7 +17,7 @@ class SqlCreateTableBuilder(val clazz: Class<out Any>) {
     }
 
     private fun typeNamePairsToString(): String {
-        return typeNamePairs.joinToString {it}
+        return typeNamePairs.joinToString { it }
     }
 
     private fun getColumnDefinition(field: Field): String {
@@ -26,7 +26,7 @@ class SqlCreateTableBuilder(val clazz: Class<out Any>) {
         return getDefaultColumnDefinition(field)
     }
 
-    private fun getDefaultColumnDefinition(field: Field) : String {
+    private fun getDefaultColumnDefinition(field: Field): String {
         return when (field.type) {
             UUID::class.java -> "UUID DEFAULT RANDOM_UUID() NOT NULL"
             Int::class.java -> "INTEGER"

@@ -80,19 +80,24 @@ internal class RepositoryTest {
     @Entity(name = "test1")
     class TestEntity1 : BaseEntity {
         val name: String?
+
         constructor(name: String) : super() {
             this.name = name
         }
+
         constructor(id: UUID, name: String) : super(id) {
             this.name = name
         }
+
         @SqlConstructor
         constructor(id: UUID) : super(id) {
             name = ""
         }
     }
+
     @Entity(name = "test2")
     class TestEntity2(val thing: String) : BaseEntity()
+
     @Entity(name = "test3")
     private class TestEntity3 : BaseEntity {
         val name = "martin"

@@ -39,7 +39,7 @@ class SqlBuilderSelectTest {
         val actualSql = sqlBuilder.createSelectSql(entity.javaClass, entity.id)
         val expectedSql = PreparedStatementValues(
                 "SELECT * FROM test_table2 WHERE id = ?;",
-                listOf(UUID(0 ,3))
+                listOf(UUID(0, 3))
         )
         assertEquals(actualSql, expectedSql)
     }

@@ -58,7 +58,7 @@ class Repository(
         }
     }
 
-    private fun <T> createPrepStm(prepStmValues: PreparedStatementValues, callback: (prepStm: PreparedStatement) -> T) : T {
+    private fun <T> createPrepStm(prepStmValues: PreparedStatementValues, callback: (prepStm: PreparedStatement) -> T): T {
         val prepStm: PreparedStatement =
                 connection.prepareStatement(prepStmValues.query, Statement.RETURN_GENERATED_KEYS)
 
@@ -71,12 +71,11 @@ class Repository(
     }
 
     @Throws(SQLException::class)
-    private fun <ID : Any> getId(prepStm: PreparedStatement, clazz: Class<ID>) : ID {
+    private fun <ID : Any> getId(prepStm: PreparedStatement, clazz: Class<ID>): ID {
         return actOnResultSet(prepStm.generatedKeys) {
             if (it.next()) {
                 return@actOnResultSet it.getObject(1, clazz)
-            }
-            else {
+            } else {
                 throw SQLException("The id of was not found. Prepared statement: $prepStm")
             }
         }
