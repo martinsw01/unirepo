@@ -32,7 +32,7 @@ internal class RepositorySelectManyTest {
     @Test
     internal fun selectsOneRow() {
         val age = 14
-        val requirement = SqlRequirementsImpl.require(TestEntityPerson::age.name, SqlRequirementsImpl.EQUAL, age)
+        val requirement = SqlRequirementsImpl.require(TestEntityPerson::age.name, SqlRequirementsImpl.EQUALS, age)
         val persons = repository.selectMany(TestEntityPerson::class.java, requirement)
         assertEquals(1, persons.size)
         assertEquals(age, persons[0].age)

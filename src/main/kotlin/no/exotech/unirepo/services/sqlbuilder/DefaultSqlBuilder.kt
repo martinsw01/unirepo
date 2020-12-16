@@ -13,7 +13,11 @@ class DefaultSqlBuilder : SqlBuilder {
     }
 
     override fun createUpdateSql(entity: Any, id: Any): PreparedStatementValues {
-        return SqlUpdateBuilder(entity, id).build()
+        return SqlUpdateBuilder.build(entity, id)
+    }
+
+    override fun createUpdateManySql(entity: Any, sqlRequirements: SqlRequirements): PreparedStatementValues {
+        return SqlUpdateBuilder.build(entity, sqlRequirements)
     }
 
     override fun createDeleteSql(clazz: Class<out Any>, id: Any): PreparedStatementValues {
@@ -25,6 +29,6 @@ class DefaultSqlBuilder : SqlBuilder {
     }
 
     override fun createSelectManySql(clazz: Class<out Any>, sqlRequirements: SqlRequirements): PreparedStatementValues {
-        return SqlSelectBuilder.Many(clazz, sqlRequirements).buildMultiple()
+        return SqlSelectBuilder.buildMultiple(clazz, sqlRequirements)
     }
 }
