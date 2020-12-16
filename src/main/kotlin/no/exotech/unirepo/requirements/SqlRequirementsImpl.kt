@@ -53,7 +53,7 @@ open class SqlRequirementsImpl : AndOperation, OrOperator {
         const val LESS_THAN_OR_EQUAL = "<="
         const val GREATER_THAN_OR_EQUAL = ">="
         const val NOT_EQUAL = "<>"
-        const val EQUAL = "="
+        const val EQUALS = "="
 
         private const val AND = "AND"
         private const val OR = "OR"
