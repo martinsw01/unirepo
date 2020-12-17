@@ -11,7 +11,7 @@ class SqlInsertBuilder(val entity: Any) {
 
     init {
         SqlUtils.traverseFieldsInClass(entity.javaClass) {
-            addToLists(it)
+            addToListsIfNotNull(it)
         }
     }
 
@@ -28,14 +28,15 @@ class SqlInsertBuilder(val entity: Any) {
         )
     }
 
-    private fun addToLists(field: Field) {
-        columns.add(field.name)
-        addToValues(field)
+    private fun addToListsIfNotNull(field: Field) {
+        getValue(field)?.also { value ->
+            columns.add(field.name)
+            values.add(value)
+        }
     }
 
-    private fun addToValues(field: Field) {
-        val value = field.get(entity).toString()
-        values.add(value)
+    private fun getValue(field: Field): String? {
+        return field.get(entity)?.toString()
     }
 
     private fun listToString(list: List<String>): String {
