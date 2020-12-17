@@ -58,12 +58,14 @@ open class SqlRequirementsImpl : AndOperation, OrOperator {
         private const val AND = "AND"
         private const val OR = "OR"
 
+        @JvmStatic
         fun require(column: String,
                     comparisonOperator: String,
                     value: Any): SqlRequirementsImpl {
             return SqlRequirementsImpl(column, comparisonOperator, value)
         }
 
+        @JvmStatic
         fun require(sqlRequirements: SqlRequirements): SqlRequirementsImpl {
             return SqlRequirementsImpl(sqlRequirements)
         }
