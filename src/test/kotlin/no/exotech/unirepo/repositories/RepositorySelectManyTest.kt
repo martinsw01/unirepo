@@ -12,10 +12,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import java.util.UUID
-import java.util.stream.IntStream
 import javax.persistence.Entity
-import kotlin.streams.asStream
-import kotlin.streams.toList
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class RepositorySelectManyTest {
