@@ -52,8 +52,14 @@ class Repository(
         }
     }
 
-    fun update(entity: Any, id: Any) {
+    override fun update(entity: Any, id: Any) {
         createPrepStm(sqlBuilder.createUpdateSql(entity, id)) {
+            it.executeUpdate()
+        }
+    }
+
+    override fun updateMany(entity: Any, requirements: SqlRequirements) {
+        createPrepStm(sqlBuilder.createUpdateManySql(entity, requirements)) {
             it.executeUpdate()
         }
     }
