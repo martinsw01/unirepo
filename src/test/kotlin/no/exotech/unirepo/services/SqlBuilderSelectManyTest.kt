@@ -3,7 +3,7 @@ package no.exotech.unirepo.services
 import no.exotech.unirepo.models.PreparedStatementValues
 import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.EQUALS
 import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.GREATER_THAN
-import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.GREATER_THAN_OR_EQUAL
+import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.GREATER_THAN_OR_EQUAL_TO
 import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.LESS_THAN
 import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.LESS_THAN_OR_EQUAL
 import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.NOT_EQUAL
@@ -65,7 +65,7 @@ class SqlBuilderSelectManyTest {
         val comparison =
                 require(column, GREATER_THAN, 1)
                         .and(column, LESS_THAN, 3)
-                        .and(column, GREATER_THAN_OR_EQUAL, 10)
+                        .and(column, GREATER_THAN_OR_EQUAL_TO, 10)
         val actualSql = sqlBuilder.createSelectManySql(TestEntity1::class.java, comparison)
         assertEquals(expectedSql, actualSql)
     }
@@ -85,7 +85,7 @@ class SqlBuilderSelectManyTest {
                 require(column, GREATER_THAN, 1)
                         .and(
                                 require(column, NOT_EQUAL, 3)
-                                        .or(column, GREATER_THAN_OR_EQUAL, 10)
+                                        .or(column, GREATER_THAN_OR_EQUAL_TO, 10)
                                         .or(
                                                 require(require("string", EQUALS, "hello world")
                                                         .and(column, LESS_THAN_OR_EQUAL, 20)
