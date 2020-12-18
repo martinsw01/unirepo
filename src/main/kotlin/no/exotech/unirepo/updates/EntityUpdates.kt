@@ -6,59 +6,56 @@ import javax.persistence.Id
 import javax.persistence.Transient
 
 
-class EntityUpdates private constructor(private val entity: Any) {
-
+class EntityUpdates {
     companion object {
         @JvmStatic
-        fun of(entity: Any): Pair<List<String>, List<Any>> {
-            val updates = EntityUpdates(entity)
-            return Pair(
-                    updates.columns.toList(),
-                    updates.values.toList()
-            )
+        fun of(entity: Any): Pair<List<String>, List<String>> {
+            return createFieldsToUpdate(entity)
         }
-    }
 
-    private val ignoredAnnotations: List<Class<out Annotation>> =
-            listOf(Transient::class.java, Id::class.java)
-
-    private val entityFields: MutableList<Field> = ArrayList()
-
-    private val columns: MutableList<String> = ArrayList()
-    private val values: MutableList<Any> = ArrayList()
-
-    init {
-        getFieldsOfSuperclass(entity.javaClass)
-        createFieldsToUpdate()
-    }
-
-    private fun createFieldsToUpdate() {
-        for (field: Field in entityFields) {
-            addToFields(field)
+        @JvmStatic
+        private fun createFieldsToUpdate(entity: Any): Pair<List<String>, List<String>> {
+            return getAllFields(entity::class.java).mapNotNull { field ->
+                mapFieldToPair(entity, field)
+            }.unzip()
         }
-    }
 
-    private fun addToFields(field: Field) {
-        field.trySetAccessible()
-        if (fieldShouldUpdate(field)) {
+        @JvmStatic
+        private fun mapFieldToPair(entity: Any, field: Field): Pair<String, String>? {
+            field.trySetAccessible()
+            if (!fieldShouldUpdate(entity, field)) {
+                return null
+            }
             val column: String = SqlUtils.camelToSnakeCase(field.name)
             val value: String = field.get(entity).toString()
-            columns.add(column)
-            values.add(value)
+            return Pair(column, value)
         }
-    }
 
-    private fun fieldShouldUpdate(field: Field): Boolean {
-        if (field.get(entity) == null)
-            return false
-        for (annotation: Class<out Annotation> in ignoredAnnotations)
-            if (field.isAnnotationPresent(annotation)) return false
-        return true
-    }
-
-    private fun getFieldsOfSuperclass(clazz: Class<*>) {
-        SqlUtils.traverseFieldsInClass(clazz) {
-            entityFields.add(it)
+        @JvmStatic
+        private fun fieldShouldUpdate(entity: Any, field: Field): Boolean {
+            if (field.get(entity) == null)
+                return false
+            for (annotation: Class<out Annotation> in ignoredAnnotations)
+                if (field.isAnnotationPresent(annotation)) return false
+            return true
         }
+
+        @JvmStatic
+        private fun getAllFields(clazz: Class<*>): List<Field> {
+            val classes = arrayOf(*clazz.getSuperClasses())
+            return classes.flatMap { it.declaredFields.asIterable() }
+        }
+
+        @JvmStatic
+        private fun Class<*>.getSuperClasses(): Array<Class<*>>{
+            if (superclass == Object::class.java) {
+                return arrayOf(this)
+            }
+            return arrayOf(*superclass.getSuperClasses(), this)
+        }
+
+        @JvmStatic
+        private val ignoredAnnotations: List<Class<out Annotation>> =
+                listOf(Transient::class.java, Id::class.java)
     }
 }
