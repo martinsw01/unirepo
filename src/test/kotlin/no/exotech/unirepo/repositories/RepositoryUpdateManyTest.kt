@@ -28,7 +28,6 @@ internal class RepositoryUpdateManyTest {
     fun setUp() {
         repository.createTable(TestEntityCar::class.java)
         (2..6).toList()
-                .parallelStream()
                 .forEach { wheel ->
                     repository.insert(TestEntityCar("brand$wheel", wheel), UUID::class.java)
                 }
