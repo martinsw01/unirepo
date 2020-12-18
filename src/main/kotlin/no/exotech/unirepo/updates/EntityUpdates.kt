@@ -15,7 +15,7 @@ class EntityUpdates {
 
         @JvmStatic
         private fun createFieldsToUpdate(entity: Any): Pair<List<String>, List<String>> {
-            return getAllFields(entity::class.java).mapNotNull { field ->
+            return SqlUtils.getAllFields(entity::class.java).mapNotNull { field ->
                 mapFieldToPair(entity, field)
             }.unzip()
         }
@@ -38,20 +38,6 @@ class EntityUpdates {
             for (annotation: Class<out Annotation> in ignoredAnnotations)
                 if (field.isAnnotationPresent(annotation)) return false
             return true
-        }
-
-        @JvmStatic
-        private fun getAllFields(clazz: Class<*>): List<Field> {
-            val classes = arrayOf(*clazz.getSuperClasses())
-            return classes.flatMap { it.declaredFields.asIterable() }
-        }
-
-        @JvmStatic
-        private fun Class<*>.getSuperClasses(): Array<Class<*>>{
-            if (superclass == Object::class.java) {
-                return arrayOf(this)
-            }
-            return arrayOf(*superclass.getSuperClasses(), this)
         }
 
         @JvmStatic

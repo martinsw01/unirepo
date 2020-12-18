@@ -36,5 +36,19 @@ class SqlUtils {
         fun getMemberClass(member: KProperty1<*, *>): Class<out Any> {
             return Class.forName(member.returnType.toString())
         }
+
+        @JvmStatic
+        fun getAllFields(clazz: Class<*>): List<Field> {
+            val classes = arrayOf(*clazz.getThisAndSuperClasses())
+            return classes.flatMap { it.declaredFields.asIterable() }
+        }
+
+        @JvmStatic
+        private fun Class<*>.getThisAndSuperClasses(): Array<Class<*>>{
+            if (superclass == Object::class.java) {
+                return arrayOf(this)
+            }
+            return arrayOf(*superclass.getThisAndSuperClasses(), this)
+        }
     }
 }
