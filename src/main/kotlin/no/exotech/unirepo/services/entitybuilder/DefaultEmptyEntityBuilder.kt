@@ -12,10 +12,9 @@ class DefaultEmptyEntityBuilder : EmptyEntityBuilder {
     @Suppress("UNCHECKED_CAST")
     private fun <Entity> getConstructor(clazz: Class<Entity>): Constructor<Entity> {
         try {
-            return clazz.constructors.asSequence().asStream()
-                    .filter { it.isAnnotationPresent(SqlConstructor::class.java) }
-                    .findAny()
-                    .get() as Constructor<Entity>
+            return clazz.constructors.first{ it.isAnnotationPresent(SqlConstructor::class.java) }
+                    as Constructor<Entity>
+
         } catch (e: IllegalAccessException) {
             val rethrow = IllegalAccessException("Cannot create new instance of $clazz because the constructor is private")
             rethrow.initCause(e)
