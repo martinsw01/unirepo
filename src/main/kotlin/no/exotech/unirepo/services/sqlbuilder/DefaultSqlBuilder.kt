@@ -9,7 +9,7 @@ class DefaultSqlBuilder : SqlBuilder {
     }
 
     override fun createTableSql(clazz: Class<out Any>): PreparedStatementValues {
-        return SqlCreateTableBuilder(clazz).build()
+        return SqlCreateTableBuilder.build(clazz)
     }
 
     override fun createUpdateSql(entity: Any, id: Any): PreparedStatementValues {
@@ -25,7 +25,7 @@ class DefaultSqlBuilder : SqlBuilder {
     }
 
     override fun createInsertSql(entity: Any): PreparedStatementValues {
-        return SqlInsertBuilder(entity).build()
+        return SqlInsertBuilder.build(entity)
     }
 
     override fun createSelectManySql(clazz: Class<out Any>, sqlRequirements: SqlRequirements): PreparedStatementValues {

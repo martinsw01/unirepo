@@ -16,7 +16,7 @@ class SqlBuilderInsertTest {
         val expectedSql = PreparedStatementValues(
                 """
                     INSERT INTO test_table
-                    ( id, str1, bool )
+                    (id, str1, bool)
                     VALUES
                     (?, ?, ?);
                 """.trimIndent(),
@@ -32,7 +32,7 @@ class SqlBuilderInsertTest {
         val expectedSql = PreparedStatementValues(
                 """
                     INSERT INTO test_table2
-                    ( id, str1, bool )
+                    (id, str1, bool)
                     VALUES
                     (?, ?, ?);
                 """.trimIndent(),

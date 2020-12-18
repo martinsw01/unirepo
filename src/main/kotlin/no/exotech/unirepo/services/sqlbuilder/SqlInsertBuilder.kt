@@ -5,41 +5,42 @@ import no.exotech.unirepo.services.SqlUtils
 import no.exotech.unirepo.services.SqlUtils.Companion.getTable
 import java.lang.reflect.Field
 
-class SqlInsertBuilder(val entity: Any) {
-    private val columns: MutableList<String> = ArrayList()
-    private val values: MutableList<String> = ArrayList()
+class SqlInsertBuilder {
 
-    init {
-        SqlUtils.traverseFieldsInClass(entity.javaClass) {
-            addToListsIfNotNull(it)
+    companion object {
+        @JvmStatic
+        fun build(entity: Any): PreparedStatementValues {
+            val (columns, values) = createListsOfNamesAndValues(entity)
+            val questionMarks = SqlUtils.joinToQMs(values)
+            return PreparedStatementValues(
+                    """
+                        INSERT INTO ${getTable(entity.javaClass)}
+                        (${columns.joinToString()})
+                        VALUES
+                        ($questionMarks);
+                    """.trimIndent(),
+                    values
+            )
         }
-    }
 
-    fun build(): PreparedStatementValues {
-        val questionMarks = SqlUtils.joinToQMs(values)
-        return PreparedStatementValues(
-                """
-                    INSERT INTO ${getTable(entity.javaClass)}
-                    (${listToString(columns)})
-                    VALUES
-                    ($questionMarks);
-                """.trimIndent(),
-                values
-        )
-    }
-
-    private fun addToListsIfNotNull(field: Field) {
-        getValue(field)?.also { value ->
-            columns.add(field.name)
-            values.add(value)
+        @JvmStatic
+        private fun createListsOfNamesAndValues(entity: Any): Pair<List<String>, List<String>> {
+            return SqlUtils.getAllFields(entity.javaClass).mapNotNull { field ->
+                mapFieldToPair(entity, field)
+            }.unzip()
         }
-    }
 
-    private fun getValue(field: Field): String? {
-        return field.get(entity)?.toString()
-    }
+        @JvmStatic
+        private fun mapFieldToPair(entity: Any, field: Field): Pair<String, String>? {
+            field.trySetAccessible()
+            return getValue(entity, field)?.let { value ->
+                Pair(field.name, value)
+            }
+        }
 
-    private fun listToString(list: List<String>): String {
-        return list.toString().replace(Regex("[\\[\\]]"), " ")
+        @JvmStatic
+        private fun getValue(entity: Any, field: Field): String? {
+            return field.get(entity)?.toString()
+        }
     }
 }
