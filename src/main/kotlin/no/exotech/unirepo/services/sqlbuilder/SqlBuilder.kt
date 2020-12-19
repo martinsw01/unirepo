@@ -11,4 +11,5 @@ interface SqlBuilder {
     fun createUpdateManySql(entity: Any, sqlRequirements: SqlRequirements): PreparedStatementValues
     fun createDeleteSql(clazz: Class<out Any>, id: Any): PreparedStatementValues
     fun createInsertSql(entity: Any): PreparedStatementValues
+    fun createInsertSql(entities: List<Any>): PreparedStatementValues
 }

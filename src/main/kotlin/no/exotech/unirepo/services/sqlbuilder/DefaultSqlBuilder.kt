@@ -25,7 +25,11 @@ class DefaultSqlBuilder : SqlBuilder {
     }
 
     override fun createInsertSql(entity: Any): PreparedStatementValues {
-        return SqlInsertBuilder.build(entity)
+        return SqlInsertBuilder.build(listOf(entity))
+    }
+
+    override fun createInsertSql(entities: List<Any>): PreparedStatementValues {
+        return SqlInsertBuilder.build(entities)
     }
 
     override fun createSelectManySql(clazz: Class<out Any>, sqlRequirements: SqlRequirements): PreparedStatementValues {

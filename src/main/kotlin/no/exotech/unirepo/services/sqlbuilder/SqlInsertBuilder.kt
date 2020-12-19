@@ -9,38 +9,56 @@ class SqlInsertBuilder {
 
     companion object {
         @JvmStatic
-        fun build(entity: Any): PreparedStatementValues {
-            val (columns, values) = createListsOfNamesAndValues(entity)
-            val questionMarks = SqlUtils.joinToQMs(values)
+        fun build(entities: Iterable<Any>): PreparedStatementValues {
+            val clazz = getClass(entities)
+            val fields = SqlUtils.getAllFields(clazz)
+            val columns = getColumns(fields)
+            val values = getValues(entities, fields)
+            val questionMarks = formatToQMs(values)
+
             return PreparedStatementValues(
                     """
-                        INSERT INTO ${getTable(entity.javaClass)}
+                        INSERT INTO ${getTable(clazz)}
                         (${columns.joinToString()})
                         VALUES
-                        ($questionMarks);
+                        $questionMarks
                     """.trimIndent(),
-                    values
+                    values.flatten().filterNotNull()
             )
         }
 
         @JvmStatic
-        private fun createListsOfNamesAndValues(entity: Any): Pair<List<String>, List<String>> {
-            return SqlUtils.getAllFields(entity.javaClass).mapNotNull { field ->
-                mapFieldToPair(entity, field)
-            }.unzip()
+        private fun getColumns(fields: List<Field>): List<String> {
+            return fields.map { it.name }
         }
 
         @JvmStatic
-        private fun mapFieldToPair(entity: Any, field: Field): Pair<String, String>? {
-            field.trySetAccessible()
-            return getValue(entity, field)?.let { value ->
-                Pair(field.name, value)
+        private fun getValues(entities: Iterable<Any>, fields: List<Field>): List<List<Any?>> {
+            return entities.map { entity ->
+                fields.map { field ->
+                    getValue(entity, field)
+                }
             }
         }
 
         @JvmStatic
-        private fun getValue(entity: Any, field: Field): String? {
-            return field.get(entity)?.toString()
+        private fun formatToQMs(values: List<List<Any?>>): String {
+            return values.joinToString(", ") { row ->
+                "(${row.joinToString { value ->
+                    value?.let { "?" } ?: "DEFAULT"
+                }})"
+            }
+        }
+
+        @JvmStatic
+        private fun getValue(entity: Any, field: Field): Any? {
+            field.trySetAccessible()
+            return field.get(entity)
+        }
+
+        @JvmStatic
+        private fun getClass(entities: Iterable<Any>): Class<*> {
+            return (entities as List<Any>)[0].javaClass
         }
     }
 }

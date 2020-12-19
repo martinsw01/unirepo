@@ -18,9 +18,9 @@ class SqlBuilderInsertTest {
                     INSERT INTO test_table
                     (id, str1, bool)
                     VALUES
-                    (?, ?, ?);
+                    (?, ?, ?)
                 """.trimIndent(),
-                listOf(entity.id.toString(), "test", "false")
+                listOf(entity.id, "test", false)
         )
         val actualSql = sqlBuilder.createInsertSql(entity)
         assertEquals(expectedSql, actualSql)
@@ -34,9 +34,9 @@ class SqlBuilderInsertTest {
                     INSERT INTO test_table2
                     (id, str1, bool)
                     VALUES
-                    (?, ?, ?);
+                    (?, ?, ?)
                 """.trimIndent(),
-                listOf(entity.id.toString(), "test2", "true")
+                listOf(entity.id, "test2", true)
         )
         val actualSql = sqlBuilder.createInsertSql(entity)
         assertEquals(expectedSql, actualSql)
