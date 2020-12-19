@@ -1,4 +1,4 @@
-package no.exotech.unirepo.entities
+package no.exotech.unirepo.models
 
 import java.util.UUID
 import javax.persistence.Id

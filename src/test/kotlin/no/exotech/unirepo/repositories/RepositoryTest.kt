@@ -1,7 +1,7 @@
 package no.exotech.unirepo.repositories
 
 import no.exotech.unirepo.annotations.SqlConstructor
-import no.exotech.unirepo.entities.BaseEntity
+import no.exotech.unirepo.models.BaseEntity
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeAll

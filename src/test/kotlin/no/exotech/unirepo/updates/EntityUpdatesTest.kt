@@ -1,6 +1,6 @@
 package no.exotech.unirepo.updates
 
-import no.exotech.unirepo.entities.BaseEntity
+import no.exotech.unirepo.models.BaseEntity
 import org.junit.jupiter.api.Assertions.assertIterableEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
