@@ -30,3 +30,10 @@ tasks.test {
         events("passed", "skipped", "failed")
     }
 }
+
+tasks.jar {
+    from(configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) })
+}
+
+group = "no.exotech"
+version = "0.1.1-alpha"
