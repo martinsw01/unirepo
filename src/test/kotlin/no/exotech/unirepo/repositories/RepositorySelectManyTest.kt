@@ -28,7 +28,7 @@ internal class RepositorySelectManyTest {
     fun createAndSeedTable() {
         repository.createTable(TestEntityPerson::class.java)
         for (age in 10..18) {
-            repository.insert(TestEntityPerson("name$age", age), SqlUtils.getMemberClass(TestEntityPerson::id))
+            repository.insert(TestEntityPerson("name$age", age), UUID::class.java)
         }
     }
 
