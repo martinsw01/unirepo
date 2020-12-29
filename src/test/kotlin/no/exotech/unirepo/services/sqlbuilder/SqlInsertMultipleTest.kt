@@ -1,7 +1,7 @@
 package no.exotech.unirepo.services.sqlbuilder
 
 import no.exotech.unirepo.models.PreparedStatementValues
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import javax.persistence.Entity
 

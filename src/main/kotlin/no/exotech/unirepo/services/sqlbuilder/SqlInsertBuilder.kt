@@ -44,9 +44,11 @@ class SqlInsertBuilder {
         @JvmStatic
         private fun formatToQMs(values: List<List<Any?>>): String {
             return values.joinToString(", ") { row ->
-                "(${row.joinToString { value ->
-                    value?.let { "?" } ?: "DEFAULT"
-                }})"
+                "(${
+                    row.joinToString { value ->
+                        value?.let { "?" } ?: "DEFAULT"
+                    }
+                })"
             }
         }
 

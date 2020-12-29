@@ -4,6 +4,7 @@ import no.exotech.unirepo.models.PreparedStatementValues
 import no.exotech.unirepo.requirements.SqlRequirements
 import no.exotech.unirepo.services.entitybuilder.DefaultEmptyEntityBuilder
 import no.exotech.unirepo.services.entitybuilder.EntityBuilder
+import no.exotech.unirepo.services.entitybuilder.EntityBuilderImp
 import no.exotech.unirepo.services.sqlbuilder.DefaultSqlBuilder
 import no.exotech.unirepo.services.sqlbuilder.SqlBuilder
 import java.sql.PreparedStatement
@@ -16,7 +17,7 @@ class Repository(
         user: String,
         psw: String,
         private val sqlBuilder: SqlBuilder = DefaultSqlBuilder(),
-        private val entityBuilder: EntityBuilder = EntityBuilder(DefaultEmptyEntityBuilder())
+        private val entityBuilder: EntityBuilder = EntityBuilderImp(DefaultEmptyEntityBuilder())
 ) : BaseRepository(className, url, user, psw), CrudRepository {
 
     override fun createTable(clazz: Class<out Any>) {

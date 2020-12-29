@@ -5,7 +5,7 @@ import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.GREATER_THA
 import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.NOT_EQUAL
 import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.require
 import no.exotech.unirepo.services.entitybuilder.EmptyEntityBuilder
-import no.exotech.unirepo.services.entitybuilder.EntityBuilder
+import no.exotech.unirepo.services.entitybuilder.EntityBuilderImp
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertIterableEquals
 import org.junit.jupiter.api.BeforeAll
@@ -21,7 +21,7 @@ internal class RepositoryUpdateManyTest {
             "jdbc:h2:./testRepotestExotech",
             "dev_test",
             "dev",
-            entityBuilder = EntityBuilder(TestEmptyEntityBuilder())
+            entityBuilder = EntityBuilderImp(TestEmptyEntityBuilder())
     )
 
     @BeforeAll

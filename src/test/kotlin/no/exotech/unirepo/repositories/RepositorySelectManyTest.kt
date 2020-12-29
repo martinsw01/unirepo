@@ -4,9 +4,8 @@ import no.exotech.unirepo.requirements.SqlRequirementsImpl
 import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.EQUALS
 import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.GREATER_THAN_OR_EQUAL_TO
 import no.exotech.unirepo.requirements.SqlRequirementsImpl.Companion.LESS_THAN
-import no.exotech.unirepo.services.SqlUtils
 import no.exotech.unirepo.services.entitybuilder.EmptyEntityBuilder
-import no.exotech.unirepo.services.entitybuilder.EntityBuilder
+import no.exotech.unirepo.services.entitybuilder.EntityBuilderImp
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -21,7 +20,7 @@ internal class RepositorySelectManyTest {
             "jdbc:h2:./testRepotestExotech",
             "dev_test",
             "dev",
-            entityBuilder = EntityBuilder(TestEmptyEntityBuilder())
+            entityBuilder = EntityBuilderImp(TestEmptyEntityBuilder())
     )
 
     @BeforeAll
@@ -45,12 +44,12 @@ internal class RepositorySelectManyTest {
     internal fun selectsThreeRows() {
         val requirements = SqlRequirementsImpl.require(TestEntityPerson::age.name, LESS_THAN, 18)
                 .and(TestEntityPerson::age.name, GREATER_THAN_OR_EQUAL_TO, 15)
-        val expectedPersons = (15..17).map {
-            age -> TestEntityPerson("name$age", age)
+        val expectedPersons = (15..17).map { age ->
+            TestEntityPerson("name$age", age)
         }
         val actualPersons = repository.selectMany(TestEntityPerson::class.java, requirements)
         assertEquals(expectedPersons.size, actualPersons.size)
-        expectedPersons.forEachIndexed {i, expectedPerson ->
+        expectedPersons.forEachIndexed { i, expectedPerson ->
             assertEquals(expectedPerson, actualPersons[i])
         }
     }

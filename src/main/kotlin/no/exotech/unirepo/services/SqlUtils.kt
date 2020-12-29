@@ -33,7 +33,7 @@ class SqlUtils {
         }
 
         @JvmStatic
-        private fun Class<*>.getThisAndSuperClasses(): Array<Class<*>>{
+        private fun Class<*>.getThisAndSuperClasses(): Array<Class<*>> {
             if (superclass == Object::class.java) {
                 return arrayOf(this)
             }
