@@ -2,7 +2,6 @@ package no.exotech.unirepo.services.entitybuilder
 
 import no.exotech.unirepo.annotations.SqlConstructor
 import java.lang.reflect.Constructor
-import kotlin.streams.asStream
 
 class DefaultEmptyEntityBuilder : EmptyEntityBuilder {
     override fun <Entity> build(clazz: Class<Entity>, vararg args: Any): Entity {
@@ -12,7 +11,7 @@ class DefaultEmptyEntityBuilder : EmptyEntityBuilder {
     @Suppress("UNCHECKED_CAST")
     private fun <Entity> getConstructor(clazz: Class<Entity>): Constructor<Entity> {
         try {
-            return clazz.constructors.first{ it.isAnnotationPresent(SqlConstructor::class.java) }
+            return clazz.constructors.first { it.isAnnotationPresent(SqlConstructor::class.java) }
                     as Constructor<Entity>
 
         } catch (e: IllegalAccessException) {
