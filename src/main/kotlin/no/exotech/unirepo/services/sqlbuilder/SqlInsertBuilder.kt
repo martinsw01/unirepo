@@ -29,7 +29,7 @@ class SqlInsertBuilder {
 
         @JvmStatic
         private fun getColumns(fields: List<Field>): List<String> {
-            return fields.map { it.name }
+            return fields.map { SqlUtils.camelToSnakeCase(it.name) }
         }
 
         @JvmStatic
