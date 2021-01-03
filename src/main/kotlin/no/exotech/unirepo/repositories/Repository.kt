@@ -11,7 +11,7 @@ import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.sql.Statement
 
-class Repository(
+open class Repository(
         className: String,
         url: String,
         user: String,
@@ -33,6 +33,12 @@ class Repository(
         }
     }
 
+    override fun insertMany(entities: List<Any>) {
+        createPrepStm(sqlBuilder.createInsertSql(entities)) {
+            it.executeLargeUpdate()
+        }
+    }
+
     override fun <Entity : Any> select(entityClazz: Class<Entity>, id: Any): Entity {
         return createPrepStm(sqlBuilder.createSelectSql(entityClazz, id)) {
             val rs = it.executeQuery()
@@ -40,7 +46,7 @@ class Repository(
         }
     }
 
-    override fun <Entity : Any> selectMany(clazz: Class<Entity>, requirement: SqlRequirements): List<Entity> {
+    override fun <Entity : Any> selectMany(clazz: Class<Entity>, requirement: SqlRequirements?): List<Entity> {
         return createPrepStm(sqlBuilder.createSelectManySql(clazz, requirement)) {
             val rs = it.executeQuery()
             entityBuilder.createEntitiesOfResultSet(rs, clazz)

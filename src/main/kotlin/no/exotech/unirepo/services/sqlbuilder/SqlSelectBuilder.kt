@@ -16,7 +16,9 @@ class SqlSelectBuilder {
         }
 
         @JvmStatic
-        fun buildMultiple(clazz: Class<out Any>, sqlRequirements: SqlRequirements): PreparedStatementValues {
+        fun buildMultiple(clazz: Class<out Any>, sqlRequirements: SqlRequirements?): PreparedStatementValues {
+            if (sqlRequirements == null)
+                return buildAll(clazz)
             val (values, requirementString) = RequirementPreparer.prepare(sqlRequirements)
             return PreparedStatementValues(
                     """
@@ -27,5 +29,9 @@ class SqlSelectBuilder {
                     values
             )
         }
+
+        @JvmStatic
+        private fun buildAll(clazz: Class<out Any>) =
+            PreparedStatementValues("SELECT * FROM ${getTable(clazz)}")
     }
 }

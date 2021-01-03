@@ -54,6 +54,12 @@ internal class RepositorySelectManyTest {
         }
     }
 
+    @Test
+    internal fun selectsAll() {
+        val allPersons = repository.selectMany(TestEntityPerson::class.java, null)
+        assertEquals(9, allPersons.size, "Not all persons were selected")
+    }
+
     @Entity(name = "test_entity_person")
     data class TestEntityPerson(var name: String?, var age: Int?, val id: UUID = UUID.randomUUID()) {
         override fun equals(other: Any?): Boolean {
@@ -79,7 +85,7 @@ internal class RepositorySelectManyTest {
         }
     }
 
-    class TestEmptyEntityBuilder() : EmptyEntityBuilder {
+    class TestEmptyEntityBuilder : EmptyEntityBuilder {
         @Suppress("UNCHECKED_CAST")
         override fun <Entity> build(clazz: Class<Entity>, vararg args: Any): Entity {
             return TestEntityPerson(null, null) as Entity

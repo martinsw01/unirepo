@@ -16,7 +16,7 @@ class DefaultSqlBuilder : SqlBuilder {
         return SqlUpdateBuilder.build(entity, id)
     }
 
-    override fun createUpdateManySql(entity: Any, sqlRequirements: SqlRequirements): PreparedStatementValues {
+    override fun createUpdateManySql(entity: Any, sqlRequirements: SqlRequirements?): PreparedStatementValues {
         return SqlUpdateBuilder.build(entity, sqlRequirements)
     }
 
@@ -32,7 +32,7 @@ class DefaultSqlBuilder : SqlBuilder {
         return SqlInsertBuilder.build(entities)
     }
 
-    override fun createSelectManySql(clazz: Class<out Any>, sqlRequirements: SqlRequirements): PreparedStatementValues {
+    override fun createSelectManySql(clazz: Class<out Any>, sqlRequirements: SqlRequirements?): PreparedStatementValues {
         return SqlSelectBuilder.buildMultiple(clazz, sqlRequirements)
     }
 }

@@ -97,6 +97,13 @@ class SqlBuilderSelectManyTest {
         assertEquals(expectedSql, actualSql)
     }
 
+    @Test
+    internal fun createsCreateAllStatement() {
+        val expectedSql = PreparedStatementValues("SELECT * FROM test_table1")
+        val actualSql = sqlBuilder.createSelectManySql(TestEntity1::class.java, null)
+        assertEquals(expectedSql, actualSql)
+    }
+
     @Entity(name = "test_table1")
     class TestEntity1(val number: Int)
 }

@@ -12,30 +12,59 @@ class SqlUpdateBuilder {
         fun build(entity: Any, id: Any): PreparedStatementValues {
             val (columns, values) = EntityUpdates.of(entity)
             return PreparedStatementValues(
-                    """
+                """
                     UPDATE ${getTable(entity.javaClass)}
                     SET
                     ${columns.joinToString { "$it = ?" }}
                     WHERE id = ?;
                 """.trimIndent(),
-                    values.plus(id)
+                values.plus(id)
             )
         }
 
         @JvmStatic
-        fun build(entity: Any, requirements: SqlRequirements): PreparedStatementValues {
-            val (columns, columnValues) = EntityUpdates.of(entity)
-            val (requirementValues, requirementsString) = RequirementPreparer.prepare(requirements)
+        fun build(entity: Any, requirements: SqlRequirements?): PreparedStatementValues {
+            val updates = EntityUpdates.of(entity)
+            val clazz = entity.javaClass
+            return if (requirements == null)
+                buildWithoutRequirements(updates, clazz)
+            else
+                buildWithRequirements(updates, clazz, requirements)
+        }
 
+        @JvmStatic
+        private fun buildWithRequirements(
+            updates: Pair<List<String>, List<String>>,
+            clazz: Class<out Any>,
+            requirements: SqlRequirements
+        ): PreparedStatementValues {
+            val (columns, columnValues) = updates
+            val (requirementValues, requirementsString) = RequirementPreparer.prepare(requirements)
             return PreparedStatementValues(
-                    """
-                        UPDATE ${getTable(entity.javaClass)}
+                """
+                    UPDATE ${getTable(clazz)}
+                    SET
+                    ${columns.joinToString { "$it = ?" }}
+                    WHERE
+                    $requirementsString
+                """.trimIndent(),
+                columnValues.plus(requirementValues)
+            )
+        }
+
+        @JvmStatic
+        private fun buildWithoutRequirements(
+            updates: Pair<List<String>, List<String>>,
+            clazz: Class<out Any>
+        ): PreparedStatementValues {
+            val (columns, columnValues) = updates
+            return PreparedStatementValues(
+                """
+                        UPDATE ${getTable(clazz)}
                         SET
                         ${columns.joinToString { "$it = ?" }}
-                        WHERE
-                        $requirementsString
                     """.trimIndent(),
-                    columnValues.plus(requirementValues)
+                columnValues
             )
         }
     }
