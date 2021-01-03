@@ -3,6 +3,8 @@ package no.exotech.unirepo.services.sqlbuilder
 import no.exotech.unirepo.models.PreparedStatementValues
 import no.exotech.unirepo.services.SqlUtils
 import java.lang.reflect.Field
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 import javax.persistence.Column
 
@@ -52,8 +54,11 @@ class SqlCreateTableBuilder {
                 UUID::class.java -> "UUID DEFAULT RANDOM_UUID() NOT NULL"
                 Int::class.java -> "INTEGER"
                 Integer::class.java -> "INTEGER"
+                Double::class.java -> "DOUBLE(10, 3)"
                 String::class.java -> "VARCHAR(255)"
                 Boolean::class.java -> "BOOLEAN"
+                LocalDate::class.java -> "DATE"
+                LocalDateTime::class.java -> "DATE"
                 Class::class.java -> "VARCHAR(255)"
                 else -> throw NotImplementedError("${field.type} not yet supported")
             }
